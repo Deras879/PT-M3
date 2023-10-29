@@ -18,8 +18,26 @@ function $Promise(executor){
         this._value = value
 
         this._handlerGroups.forEach((handler) => {
-            if (handler.successCb) {
-              handler.successCb(this._value);
+            if (!handler.successCb) {
+              handler.downstreamPromise._internalResolve(this._value)
+            }else {
+                try {
+                    let result = handler.successCb(this._value)
+
+                    if(result instanceof $Promise){
+                        let sH = (value) => {
+                            handler.downstreamPromise._internalResolve(value)
+                        }
+                        let eH = (err) => {
+                            handler.downstreamPromise._internalReject(err)
+                        }
+                        result.then(sH, eH)
+                    }else{
+                        handler.downstreamPromise._internalResolve(result)
+                    }
+                  } catch (error) {
+                    handler.downstreamPromise._internalReject(error)
+                  }
             }
           });
 
@@ -31,8 +49,26 @@ function $Promise(executor){
         this._value = reason
 
         this._handlerGroups.forEach((handler) => {
-            if (handler.errorCb) {
-              handler.errorCb(this._value);
+            if (!handler.errorCb) {
+              handler.downstreamPromise._internalReject(this._value)
+            }else {
+                try {
+                    let result = handler.errorCb(this._value)
+
+                    if(result instanceof $Promise){
+                        let sH = (value) => {
+                            handler.downstreamPromise._internalResolve(value)
+                        }
+                        let eH = (err) => {
+                            handler.downstreamPromise._internalReject(err)
+                        }
+                        result.then(sH, eH)
+                    }else{
+                        handler.downstreamPromise._internalResolve(result)
+                    }
+                  } catch (error) {
+                    handler.downstreamPromise._internalReject(error)
+                  }
             }
           });
     }
@@ -45,31 +81,37 @@ function $Promise(executor){
 
 
     this.then = (successCb, errorCb) => {
-       
+        let downstreamPromise = new $Promise(() => {})
 
         if(typeof successCb !== "function") successCb = false;
         if(typeof errorCb !== "function") errorCb = false;
 
-        if(this._state === "fulfilled") {
-                successCb(this._value)
+        if(this._state === "fulfilled" && successCb) {
+            successCb(this._value)
+            
+            
+            
         }
-
         if(this._state === "rejected" && errorCb) {
             errorCb(this._value)
         }
 
         let handlers = {
             successCb,
-            errorCb
+            errorCb,
+            downstreamPromise
         }
         this._handlerGroups.push(handlers)
 
+
+        return downstreamPromise;
     }
 
 
     this.catch = function(func) {
         return this.then(null, func)
     }
+    
 
 }
 
