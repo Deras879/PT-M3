@@ -9,10 +9,17 @@ function $Promise(executor){
 
     this._state = "pending"
     this._value = undefined
+    this._handlerGroups = []
     this._internalResolve = (value) => {
         if(this._state === "fulfilled" || this._state === "rejected") return
         this._state = "fulfilled"
         this._value = value
+        
+        this._handlerGroups.forEach((handler) => {
+            if (handler.successCb) {
+              handler.successCb(this._value);
+            }
+          });
 }
     this._internalReject = (reason) => {
         if(this._state === "fulfilled" || this._state === "rejected") return
@@ -25,6 +32,26 @@ function $Promise(executor){
 
 
     executor(resolve, reject);
+
+
+    this.then = (successCb, errorCb) => {
+       
+
+        if(typeof successCb !== "function") successCb = false;
+        if(typeof errorCb !== "function") errorCb = false;
+
+        if(this._value !== undefined && this._state === "fulfilled") {
+                successCb(this._value)
+        }
+        let handlers = {
+            successCb,
+            errorCb
+        }
+        this._handlerGroups.push(handlers)
+
+    }
+
+
 }
 
 
