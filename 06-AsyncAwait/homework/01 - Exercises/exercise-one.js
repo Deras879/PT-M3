@@ -41,6 +41,19 @@ async function problemA() {
 
   // asyncawait version
   // Tu código acá:
+
+
+    
+    try {
+      const stanza = await exerciseUtils.promisifiedReadFile("poem-one/stanza-01.txt");
+      console.log("-- A. versión async/await --");
+      exerciseUtils.blue(stanza);
+    } catch (error) {
+      
+    }
+    
+  
+
 }
 
 async function problemB() {
@@ -56,6 +69,15 @@ async function problemB() {
 
   // asyncawait version
   // Tu código acá:
+
+  try {
+    const stanza2 = await exerciseUtils.promisifiedReadFile("poem-one/stanza-02.txt");
+    exerciseUtils.blue(stanza2);
+    const stanza3 = await exerciseUtils.promisifiedReadFile("poem-one/stanza-03.txt");
+    exerciseUtils.blue(stanza3)
+  } catch (error) {
+    
+  }
 }
 
 async function problemC() {
@@ -72,6 +94,15 @@ async function problemC() {
 
   // asyncawait version
   // Tu código acá:
+  try {
+    const stanza2 = await exerciseUtils.promisifiedReadFile("poem-one/stanza-02.txt");
+    exerciseUtils.blue(stanza2);
+    const stanza3 = await exerciseUtils.promisifiedReadFile("poem-one/stanza-03.txt");
+    exerciseUtils.blue(stanza3)
+  } catch (error) {
+    
+  }
+
 }
 
 async function problemD() {
@@ -87,6 +118,13 @@ async function problemD() {
 
   // asyncawait version
   // Tu código acá:
+
+  try {
+    const stanza4 = await exerciseUtils.promisifiedReadFile("poem-one/wrong-file-name.txt");
+    exerciseUtils.blue(stanza4);
+  } catch (error) {
+    exerciseUtils.magenta(error)
+  }
 }
 
 async function problemE() {
@@ -107,6 +145,15 @@ async function problemE() {
 
   // asyncawait version
   // Tu código acá:
+  try {
+    exerciseUtils.blue(await exerciseUtils.promisifiedReadFile("poem-one/stanza-03.txt"))
+    exerciseUtils.blue(await exerciseUtils.promisifiedReadFile("poem-one/wrong-file-name.txt"))
+
+  } catch (error) {
+    exerciseUtils.magenta(error)
+  }
+
+
 }
 
 async function problemF() {
@@ -132,4 +179,16 @@ async function problemF() {
 
   // asyncawait version
   // Tu código acá:
+
+  try {
+    exerciseUtils.blue(await exerciseUtils.promisifiedReadFile("poem-one/stanza-03.txt"))
+    exerciseUtils.blue(await exerciseUtils.promisifiedReadFile("poem-one/stanza-04.txt"))
+    exerciseUtils.blue(await exerciseUtils.promisifiedReadFile("poem-one/wrong-file-name.txt"))
+
+  } catch (error) {
+    exerciseUtils.magenta(error)
+  }
+
+
+
 }
